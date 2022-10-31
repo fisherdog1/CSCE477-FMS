@@ -1,0 +1,15 @@
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\bin\Debug\net6.0\RC4Vuln.exe
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\bin\Debug\net6.0\RC4Vuln.deps.json
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\bin\Debug\net6.0\RC4Vuln.runtimeconfig.json
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\bin\Debug\net6.0\RC4Vuln.dll
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\bin\Debug\net6.0\RC4Vuln.pdb
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\obj\Debug\net6.0\RC4Vuln.csproj.AssemblyReference.cache
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\obj\Debug\net6.0\RC4Vuln.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\obj\Debug\net6.0\RC4Vuln.AssemblyInfoInputs.cache
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\obj\Debug\net6.0\RC4Vuln.AssemblyInfo.cs
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\obj\Debug\net6.0\RC4Vuln.csproj.CoreCompileInputs.cache
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\obj\Debug\net6.0\RC4Vuln.dll
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\obj\Debug\net6.0\refint\RC4Vuln.dll
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\obj\Debug\net6.0\RC4Vuln.pdb
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\obj\Debug\net6.0\RC4Vuln.genruntimeconfig.cache
+C:\Users\alinn\source\repos\RC4Vuln\RC4Vuln\obj\Debug\net6.0\ref\RC4Vuln.dll
