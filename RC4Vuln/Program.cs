@@ -54,6 +54,9 @@ namespace RC4Vuln
 
         static void Main(string[] args)
         {
+            //FileStream fs = File.OpenRead("A:/pcaps/csce477-12.cap");
+            //PcapParser parser = new PcapParser(fs);
+
             // 64 bit WEP consists of a 3 byte IV and 5 byte Secret
             int nSK = 5;
 
