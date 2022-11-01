@@ -45,13 +45,36 @@ namespace RC4Vuln
                 UInt32 incl_len = r.ReadUInt32();
                 UInt32 orig_len = r.ReadUInt32();
 
-                // Consume packet bytes
-                for (long i = 0; i < incl_len; i++)
-                {
-                    _ = r.ReadByte(); // Do nothing with bytes for now
-                }
+                long startOfPacket = r.BaseStream.Position;
 
-                Console.WriteLine($"Pkt len: {incl_len}");
+                UInt16 fc = r.ReadUInt16();
+
+                int ftype = (fc >> 2) & 0x3;
+                int subtype = (fc >> 4) & 0xF;
+
+                // IV is at bytes 24,25,26 from start of packet
+                r.BaseStream.Seek(startOfPacket + 24, SeekOrigin.Begin);
+                byte[] iv = r.ReadBytes(3);
+
+                // WEP ICV is the last 4 bytes
+                r.BaseStream.Seek(startOfPacket + incl_len - 4, SeekOrigin.Begin);
+                byte[] icv = r.ReadBytes(4);
+
+                // Consume rest of packet bytes
+                r.BaseStream.Seek(startOfPacket + incl_len, SeekOrigin.Begin);
+
+                // Data packet
+                // https://en.wikipedia.org/wiki/802.11_Frame_Types
+                if (ftype == 2 && subtype == 0)
+                {
+                    Console.WriteLine($"Data pkt len: {incl_len} IV: {iv[0]:X2}{iv[1]:X2}{iv[2]:X2} ICV: {icv[0]:X2}{icv[1]:X2}{icv[2]:X2}{icv[3]:X2}");
+
+                    // Check for weak IVs ()
+                    int iva = iv[0] - 3;
+
+                    if (iv[1] == 0xFF && iva >= 0 && iva <= 13)
+                        Console.WriteLine($" (Weak A = {iva} X = {iv[2]})!");
+                }
             }
         }
     }
