@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,11 +10,13 @@ namespace RC4Vuln
     // Thing that opens libpcap .cap files (Not pcapng)
     internal class PcapParser
     {
+        List<WeakPacket> packets;
 
         public PcapParser(Stream instream)
         {
-            BinaryReader r = new BinaryReader(instream);
+            packets = new List<WeakPacket>();
 
+            BinaryReader r = new BinaryReader(instream);
             UInt32 magic = r.ReadUInt32();
 
             // Either a1b2c3d4 or the same thing reversed, used to determine byte order.
@@ -52,30 +55,51 @@ namespace RC4Vuln
                 int ftype = (fc >> 2) & 0x3;
                 int subtype = (fc >> 4) & 0xF;
 
-                // IV is at bytes 24,25,26 from start of packet
-                r.BaseStream.Seek(startOfPacket + 24, SeekOrigin.Begin);
-                byte[] iv = r.ReadBytes(3);
-
-                // WEP ICV is the last 4 bytes
-                r.BaseStream.Seek(startOfPacket + incl_len - 4, SeekOrigin.Begin);
-                byte[] icv = r.ReadBytes(4);
-
-                // Consume rest of packet bytes
-                r.BaseStream.Seek(startOfPacket + incl_len, SeekOrigin.Begin);
-
                 // Data packet
                 // https://en.wikipedia.org/wiki/802.11_Frame_Types
                 if (ftype == 2 && subtype == 0)
                 {
-                    Console.WriteLine($"Data pkt len: {incl_len} IV: {iv[0]:X2}{iv[1]:X2}{iv[2]:X2} ICV: {icv[0]:X2}{icv[1]:X2}{icv[2]:X2}{icv[3]:X2}");
+                    // IV is at bytes 24,25,26 from start of packet
+                    r.BaseStream.Seek(startOfPacket + 24, SeekOrigin.Begin);
+                    byte[] iv = r.ReadBytes(3);
+
+                    // Position of stream after IV (start of ciphertext)
+                    long posAfterIV = r.BaseStream.Position;
+
+                    // Consume packet bytes
+                    byte[] packetdata = r.ReadBytes((int)(startOfPacket + incl_len - posAfterIV - 4));
+
+                    // WEP ICV is the last 4 bytes
+                    byte[] icv = r.ReadBytes(4);
 
                     // Check for weak IVs ()
                     int iva = iv[0] - 3;
 
                     if (iv[1] == 0xFF && iva >= 0 && iva <= 13)
-                        Console.WriteLine($" (Weak A = {iva} X = {iv[2]})!");
+                    {
+                        WeakPacket weak = new WeakPacket(iv, packetdata);
+                        // Console.WriteLine(weak);
+
+                        packets.Add(weak);
+                    }
+                }
+                else
+                {
+                    r.BaseStream.Seek((int)(startOfPacket + incl_len), SeekOrigin.Begin);
                 }
             }
+        }
+
+        // Get weak packets that have the given A value
+        public List<WeakPacket> GetWeakPackets(int A)
+        {
+            List<WeakPacket> output = new List<WeakPacket>();
+
+            foreach (WeakPacket packet in packets)
+                if (packet.A == A)
+                    output.Add(packet);
+
+            return output;
         }
     }
 }

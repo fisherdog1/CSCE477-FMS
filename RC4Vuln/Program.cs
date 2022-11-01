@@ -18,6 +18,7 @@ namespace RC4Vuln
 
             // Encipher
             Console.Write("Test Ciphertext: ");
+            // byte[] testcipher = new byte[testmsg.Length];
 
             foreach (byte p in testmsg)
             {
@@ -54,8 +55,14 @@ namespace RC4Vuln
 
         static void Main(string[] args)
         {
-            FileStream fs = File.OpenRead("A:/pcaps/csce477-12.cap");
+            // Comment this out if not using / you don't have the file
+            FileStream fs = File.OpenRead("A:/pcaps/csce477-03.cap");
             PcapParser parser = new PcapParser(fs);
+
+            foreach (WeakPacket packet in parser.GetWeakPackets(0))
+            {
+                Console.WriteLine(packet);
+            }
 
             // 64 bit WEP consists of a 3 byte IV and 5 byte Secret
             int nSK = 5;
