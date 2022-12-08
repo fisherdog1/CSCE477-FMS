@@ -24,7 +24,7 @@ namespace RC4Vuln
 
         public override string ToString()
         {
-            return $"Weak Packet: A: {A} X: {X} Len: {packetdata.Length} IV: {iv[0]:X2}{iv[1]:X2}{iv[2]:X2} ICV: {ICV[0]:X2}{ICV[1]:X2}{ICV[2]:X2}{ICV[3]:X2}";
+            return $"Weak Packet: A: {A} X: {X} Len: {packetdata.Length + 3} IV: {iv[0]:X2}{iv[1]:X2}{iv[2]:X2} ICV: {ICV[0]:X2}{ICV[1]:X2}{ICV[2]:X2}{ICV[3]:X2}";
         }
 
         public WeakPacket(byte[] iv, byte[] packetdata)
